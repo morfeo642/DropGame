@@ -12,7 +12,7 @@ public class DropGame extends Game {
     {
         batch = new SpriteBatch();
         
-        this.setScreen(new GameScreen(this));
+        this.setScreen(new MainScreen(this));
     }
    
     @Override
