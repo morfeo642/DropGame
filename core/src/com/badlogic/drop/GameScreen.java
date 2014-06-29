@@ -19,20 +19,22 @@ import com.badlogic.gdx.math.MathUtils;
 import java.util.Iterator;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.Color;
 
 public class GameScreen extends ScreenAdapter {
     
         public GameScreen(final DropGame dropGame)
         {
-            /* crear texturas y sonidos */
             dropletImage = new Texture(Gdx.files.internal("droplet.png"));
             bucketImage = new Texture(Gdx.files.internal("bucket.png"));
             rainSoundBackground = Gdx.audio.newMusic(Gdx.files.internal("rain.mp3"));
             dropletSound = Gdx.audio.newSound(Gdx.files.internal("droplet.wav"));
             atticImage = new Texture(Gdx.files.internal("attic.jpg"));
-            
             rainSoundBackground.setLooping(true);
+            
+            font = new BitmapFont();
+            font.setScale(1.5f);
             
             /* obtener sprite batch para dibujar en la pantalla */
             batch = dropGame.batch;
@@ -48,7 +50,7 @@ public class GameScreen extends ScreenAdapter {
         
         @Override
         public void show() 
-        {
+        {       
             /* crear la cámara */
             camera = new OrthographicCamera();
             camera.setToOrtho(false, 800, 480);
@@ -98,6 +100,8 @@ public class GameScreen extends ScreenAdapter {
                     {
                         dropletSound.play();
                         it.remove();
+                        ++dropletsCatched;
+                        ++score;
                     }
                     else if(droplet.y < 0)
                     {
@@ -123,7 +127,14 @@ public class GameScreen extends ScreenAdapter {
                 batch.draw(bucketImage, bucket.x, bucket.y);
                 for(Rectangle droplet : droplets)
                     batch.draw(dropletImage, droplet.x, droplet.y);
+                
+                /* dibujamos las estdísticas en la esquina superior derecha */
+                batch.draw(dropletImage, 640, 375);
+                font.draw(batch, String.valueOf(dropletsCatched), 700, 400);
+                if(score > 0)
+                    font.draw(batch, String.valueOf(score) + ((score > 1) ? " points" : " point"), 700, 340);
                 batch.end();
+                
                 
 	}
         
@@ -136,13 +147,19 @@ public class GameScreen extends ScreenAdapter {
             dropletSound.dispose();
         }
      
-        private Texture dropletImage, bucketImage, atticImage;
-        private Music rainSoundBackground;
-        private Sound dropletSound;
+        Texture dropletImage, bucketImage, atticImage;
+        Music rainSoundBackground;
+        Sound dropletSound;
         private OrthographicCamera camera;
         private SpriteBatch batch;
+        private BitmapFont font;
 
         private Rectangle bucket = new Rectangle();
         private Array<Rectangle> droplets = new Array<Rectangle>();
         private long lastDropletTime;
+        
+        
+        
+        private int dropletsCatched = 0;
+        private int score = 0; 
 }

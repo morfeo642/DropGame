@@ -15,11 +15,12 @@ import com.badlogic.gdx.graphics.GL20;
  */
 public class MainScreen extends ScreenAdapter
 {
-    public MainScreen(final DropGame dropGame)
+    public MainScreen(final DropGame dropGame, final GameScreen gameScreen)
     {
         font = new BitmapFont();
         batch = dropGame.batch;
         this.dropGame = dropGame;
+        this.gameScreen = gameScreen;
     }
     
     @Override
@@ -35,7 +36,7 @@ public class MainScreen extends ScreenAdapter
         if(Gdx.input.isTouched())
         {
             /* cambiamos la pantalla */
-            dropGame.setScreen(new GameScreen(dropGame));
+            dropGame.setScreen(gameScreen);
         }
         
         /* dibujamos el menú principal */
@@ -61,4 +62,5 @@ public class MainScreen extends ScreenAdapter
     private SpriteBatch batch;
     private DropGame dropGame;
     private OrthographicCamera camera;
+    private GameScreen gameScreen;
 }

@@ -3,6 +3,7 @@ package com.badlogic.drop;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
 
 public class DropGame extends Game {
@@ -12,7 +13,9 @@ public class DropGame extends Game {
     {
         batch = new SpriteBatch();
         
-        this.setScreen(new MainScreen(this));
+        GameScreen gameScreen = new GameScreen(this);
+
+        this.setScreen(new MainScreen(this, gameScreen));
     }
    
     @Override
@@ -23,3 +26,4 @@ public class DropGame extends Game {
     
     SpriteBatch batch;
 }
+
