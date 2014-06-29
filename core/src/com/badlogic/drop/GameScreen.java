@@ -33,7 +33,6 @@ public class GameScreen extends ScreenAdapter {
             atticImage = new Texture(Gdx.files.internal("attic.jpg"));
             
             rainSoundBackground.setLooping(true);
-            rainSoundBackground.play();
             
             /* obtener sprite batch para dibujar en la pantalla */
             batch = dropGame.batch;
@@ -53,6 +52,9 @@ public class GameScreen extends ScreenAdapter {
             /* crear la cámara */
             camera = new OrthographicCamera();
             camera.setToOrtho(false, 800, 480);
+            
+            /* el sonido de lluvia se escucha cuando el juego comienza */
+            rainSoundBackground.play();
         }
 
 	@Override
