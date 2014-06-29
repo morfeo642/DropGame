@@ -87,34 +87,46 @@ public class GameScreen extends ScreenAdapter {
                 camera.update();
                 
                 /* actualizamos la posición vertical de las gotas */
-                for(Rectangle droplet : droplets)
-                    droplet.y -= 200 * Gdx.graphics.getDeltaTime();
+                for(Droplet droplet : droplets)
+                    droplet.getRect().y -= 200 * Gdx.graphics.getDeltaTime();
                 
-                /* las gotas que caigan en el cubo las eliminamosy aquellas que se salgan
+                /* las gotas que caigan en el cubo las eliminamos y aquellas que se salgan
                 de la pantalla */
-                Iterator<Rectangle> it = droplets.iterator();
+                Iterator<Droplet> it = droplets.iterator();
                 while(it.hasNext())
                 {
-                    Rectangle droplet = it.next();
-                    if(droplet.overlaps(bucket))
+                    Droplet droplet = it.next();
+                    if(droplet.getRect().overlaps(bucket))
                     {
                         dropletSound.play();
                         it.remove();
                         ++dropletsCatched;
-                        ++score;
+                        score += droplet.getValue();
                     }
-                    else if(droplet.y < 0)
+                    else if(droplet.getRect().y < 0)
                     {
                         it.remove();
+                        score -= 2 * droplet.getValue();
                     }
                 }           
                 /* creamos nuevas gotas */
                 if((TimeUtils.millis() - lastDropletTime) >= MathUtils.random(600, 900))
                 {
-                    Rectangle droplet = new Rectangle();
-                    droplet.x = MathUtils.random(64, 800-64);
-                    droplet.y = 480;
-                    droplet.width = droplet.height = 64;
+                    Rectangle re = new Rectangle();
+                    re.x = MathUtils.random(64, 800-64);
+                    re.y = 480;
+                    re.width = re.height = 64;
+                    DropletType dropletType;
+                    int aux = MathUtils.random(1, 8);
+                    if(aux <= 5)
+                        dropletType = DropletType.NORMAL;
+                    else if(aux <= 7)
+                        dropletType = DropletType.DOUBLE;
+                    else 
+                        dropletType = DropletType.TRIPLE;
+                    
+                    Droplet droplet = new Droplet(dropletType, re);
+                    
                     droplets.add(droplet);
                     lastDropletTime = TimeUtils.millis();
                 }
@@ -125,9 +137,8 @@ public class GameScreen extends ScreenAdapter {
                 batch.begin();
                 batch.draw(atticImage, 0, 0);
                 batch.draw(bucketImage, bucket.x, bucket.y);
-                for(Rectangle droplet : droplets)
-                    batch.draw(dropletImage, droplet.x, droplet.y);
-                
+                for(Droplet droplet : droplets)
+                    droplet.draw(dropletImage, batch);
                 /* dibujamos las estdísticas en la esquina superior derecha */
                 batch.draw(dropletImage, 640, 375);
                 font.draw(batch, String.valueOf(dropletsCatched), 700, 400);
@@ -155,7 +166,7 @@ public class GameScreen extends ScreenAdapter {
         private BitmapFont font;
 
         private Rectangle bucket = new Rectangle();
-        private Array<Rectangle> droplets = new Array<Rectangle>();
+        private Array<Droplet> droplets = new Array<Droplet>();
         private long lastDropletTime;
         
         
