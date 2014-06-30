@@ -110,7 +110,13 @@ public class GameScreen extends ScreenAdapter {
                     }
                 }           
                 /* creamos nuevas gotas */
-                if((TimeUtils.millis() - lastDropletTime) >= MathUtils.random(600, 900))
+                double x, y;
+                final double m = 2.5;
+                x = dropletsCatched;
+                y = 1200 - m * x;
+                if(y < 250)
+                    y = 250;
+                if((TimeUtils.millis() - lastDropletTime) >= MathUtils.random((int)(y - 100), (int)(y + 100)))
                 {
                     Rectangle re = new Rectangle();
                     re.x = MathUtils.random(64, 800-64);
@@ -172,5 +178,5 @@ public class GameScreen extends ScreenAdapter {
         
         
         private int dropletsCatched = 0;
-        private int score = 0; 
+        private int score = 200; 
 }
