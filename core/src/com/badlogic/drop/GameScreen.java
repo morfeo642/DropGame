@@ -26,6 +26,7 @@ public class GameScreen extends ScreenAdapter {
     
         public GameScreen(final DropGame dropGame)
         {
+            this.dropGame = dropGame;
             dropletImage = new Texture(Gdx.files.internal("droplet.png"));
             bucketImage = new Texture(Gdx.files.internal("bucket.png"));
             rainSoundBackground = Gdx.audio.newMusic(Gdx.files.internal("rain.mp3"));
@@ -102,11 +103,16 @@ public class GameScreen extends ScreenAdapter {
                         it.remove();
                         ++dropletsCatched;
                         score += droplet.getValue();
+                        if(score > maxScore)
+                            maxScore = score;
                     }
                     else if(droplet.getRect().y < 0)
                     {
                         it.remove();
                         score -= 2 * droplet.getValue();
+                        /* gameover ?? */
+                        if(score <= 0)
+                            dropGame.setScreen(new GameOverScreen(dropGame));
                     }
                 }           
                 /* creamos nuevas gotas */
@@ -164,6 +170,7 @@ public class GameScreen extends ScreenAdapter {
             dropletSound.dispose();
         }
      
+        DropGame dropGame;
         Texture dropletImage, bucketImage, atticImage;
         Music rainSoundBackground;
         Sound dropletSound;
@@ -179,4 +186,5 @@ public class GameScreen extends ScreenAdapter {
         
         private int dropletsCatched = 0;
         private int score = 200; 
+        private int maxScore = score;
 }
